@@ -1,6 +1,8 @@
 # awilix-express
 
-Awilix 2 helpers and scope-instantiating middleware for **Express**. 🚀
+[![Build Status](https://travis-ci.org/talyssonoc/awilix-express.svg?branch=master)](https://travis-ci.org/talyssonoc/awilix-express) [![Coverage Status](https://coveralls.io/repos/github/talyssonoc/awilix-express/badge.svg?branch=master)](https://coveralls.io/github/talyssonoc/awilix-express?branch=master)
+
+Dependency injection [Awilix 2](https://github.com/jeffijoe/awilix) helpers and scope-instantiating middleware for **Express**. 🚀
 
 ## Installation
 

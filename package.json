@@ -19,6 +19,13 @@
   "bugs": "https://github.com/talyssonoc/awilix-express/issues",
   "author": "Talysson <talyssonoc@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "awilix",
+    "express",
+    "dependency",
+    "dependency-injection",
+    "di"
+  ],
   "devDependencies": {
     "assert-request": "^1.0.6",
     "awilix": "^2.2.3",
