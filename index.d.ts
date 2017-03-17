@@ -5,8 +5,8 @@
 /// <reference types="awilix" />
 /// <reference types="express" />
 
-import awilix = require("awilix");
-import express = require("express");
+import awilix = require('awilix');
+import express = require('express');
 
 /**
  * The core.Request interface.
