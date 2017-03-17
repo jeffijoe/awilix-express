@@ -6,7 +6,7 @@ const Express = require('express');
 const { Router } = Express;
 const { createContainer, asClass } = require('awilix');
 const AssertRequest = require('assert-request');
-const { scopePerRequest, makeInvoker, makeClassInvoker } = require('../../lib/awilix-express');
+const { scopePerRequest, inject, makeInvoker, makeClassInvoker } = require('../../lib/awilix-express');
 
 class TestService {
   constructor({ serviceConstructor }) { }
@@ -19,6 +19,10 @@ class TestClass {
   handle(req, res) {
     res.send({ success: true });
   }
+}
+
+function handleInjector(req, res) {
+  res.send({ success: true });
 }
 
 function testFactoryFunction({ testFactoryFunctionInvocation, testService }) {
@@ -46,6 +50,7 @@ function createServer(spies) {
   const classAPI = makeClassInvoker(TestClass);
   router.get('/function', fnAPI('handle'));
   router.get('/class', classAPI('handle'));
+  router.get('/injector', inject('testClassConstructor', 'testService'), handleInjector);
   app.use(router);
 
   return new Promise((resolve, reject) => {
@@ -85,8 +90,8 @@ describe('integration', () => {
         request.get('/function').okay(),
         request.get('/function').okay()
       ]).then(() => {
-        expect(testClassConstructor).to.not.have.been.called;
         expect(testFactoryFunctionInvocation).to.have.been.calledTwice;
+        expect(testClassConstructor).to.not.have.been.called;
         expect(serviceConstructor).to.have.been.calledTwice;
       });
     });
@@ -97,6 +102,19 @@ describe('integration', () => {
       return Promise.all([
         request.get('/class').okay(),
         request.get('/class').okay()
+      ]).then(() => {
+        expect(testFactoryFunctionInvocation).to.not.have.been.called;
+        expect(testClassConstructor).to.have.been.calledTwice;
+        expect(serviceConstructor).to.have.been.calledTwice;
+      });
+    });
+  });
+
+  describe('inject', () => {
+    it('makes sure the spy is called once for each request', () => {
+      return Promise.all([
+        request.get('/injector').okay(),
+        request.get('/injector').okay()
       ]).then(() => {
         expect(testFactoryFunctionInvocation).to.not.have.been.called;
         expect(testClassConstructor).to.have.been.calledTwice;

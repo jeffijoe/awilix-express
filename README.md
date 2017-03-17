@@ -35,6 +35,8 @@ container.registerClass({
   todosService: [TodosService, Lifetime.SCOPED]
 });
 
+container.registerValue({ theAnswer: 42 });
+
 // Add the middleware, passing it your Awilix container.
 // This will attach a scoped container on the context.
 app.use(scopePerRequest(container));
@@ -50,6 +52,22 @@ app.use((req, res, next) => {
 ```
 
 Then in your route handlers...
+
+```js
+const { inject } = require('awilix-express');
+// `inject` accepts multiple parameters, not an array
+
+router.get('/todos', inject('todosService', 'theAnswer'), (req, res) => {
+  req.todosService.find().then((result) => {
+    res.send({
+      result,
+      answer: req.theAnswer
+    });
+  });
+});
+```
+
+You can also create invokers instead of using the `inject` middleware:
 
 ```js
 // There's a makeClassInvoker for classes..
