@@ -55,7 +55,7 @@
     "rimraf": "^2.6.1",
     "ts-jest": "^22.0.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.7.0"
   },
   "peerDependencies": {
     "awilix": "^3.0.0",

@@ -10,10 +10,6 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@types/babel-types@*":
-  version "6.25.2"
-  resolved "https://registry.yarnpkg.com/@types/babel-types/-/babel-types-6.25.2.tgz#5c57f45973e4f13742dbc5273dd84cffe7373a9e"
-
 "@types/body-parser@*":
   version "1.16.8"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.16.8.tgz#687ec34140624a3bec2b1a8ea9268478ae8f3be3"
@@ -74,12 +70,6 @@
 "@types/node@^8.5.2":
   version "8.5.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.2.tgz#83b8103fa9a2c2e83d78f701a9aa7c9539739aa5"
-
-"@types/prettier@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.9.0.tgz#cf63bd9a2af1e0fb29b2fc59459946039762d001"
-  dependencies:
-    "@types/babel-types" "*"
 
 "@types/rimraf@^2.0.2":
   version "2.0.2"
@@ -3450,9 +3440,9 @@ type-is@~1.6.15:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-typescript@^2.6.1:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.6.2.tgz#3c5b6fd7f6de0914269027f03c0946758f7673a4"
+typescript@^2.7.0:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
 
 uglify-js@^2.6:
   version "2.8.29"
