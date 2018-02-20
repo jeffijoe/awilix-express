@@ -1,9 +1,20 @@
 language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+
 node_js:
-  - "node"
-  - "6.1"
-  - "6.0"
-script:
+  - "stable"
+  - "8"
+  - "7"
+  - "6"
+
+# Lint errors should trigger a failure.
+before_script:
   - npm run lint
-  - npm test
-  - npm run coveralls
+  - npm run build
+
+# Runs the coverage script (which runs the tests)
+script: npm run coveralls

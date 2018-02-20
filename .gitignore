@@ -1,3 +1,10 @@
 *.log
 node_modules/
 coverage/
+lib/
+.nyc_output
+.test-out
+.DS_Store
+.idea/workspace.xml
+.sublime-workspace
+.npmrc
