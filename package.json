@@ -42,7 +42,7 @@
     "@types/express": "^4.11.1",
     "@types/glob": "^5.0.34",
     "@types/jest": "^22.0.0",
-    "@types/node": "^8.5.2",
+    "@types/node": "^9.4.6",
     "@types/rimraf": "^2.0.2",
     "assert-request": "^1.0.6",
     "awilix": "^3.0.0",
