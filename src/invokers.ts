@@ -91,6 +91,9 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
     return function memberInvoker(req: any, ...rest: any[]) {
       const container: AwilixContainer = req.container;
       const resolved: any = container.build(resolver);
+      if (!resolved[methodToInvoke]) {
+        throw Error(`The method attempting to be invoked, '${methodToInvoke}', does not exist on the controller`);
+      }
       return resolved[methodToInvoke](req, ...rest);
     };
   };
