@@ -51,6 +51,7 @@ function createServer(spies: any) {
   const classAPI = makeClassInvoker(TestClass);
   router.get("/function", fnAPI("handle"));
   router.get("/class", classAPI("handle"));
+  router.get("/fail", fnAPI("not a method"))
   app.use(router);
 
   return new Promise((resolve, reject) => {
@@ -111,4 +112,14 @@ describe("integration", function() {
       });
     });
   });
+
+  describe("Invoker Descriptive Error", function() {
+    it("throws an error when calling non-existent route handler and returns descriptive message", function() {
+      return request.get("/fail")
+        .status(500)
+        .assert(function(res: any) {
+          return res.body.includes('does not exist on the controller');
+        });
+    })
+  })
 });
