@@ -9,7 +9,7 @@ import {
   FunctionReturning
 } from "awilix";
 import { isClass } from "awilix/lib/utils";
-import { Request } from "express";
+import { NextFunction, Request, Response } from "express";
 
 /**
  * Creates either a function invoker or a class invoker, based on whether
@@ -94,7 +94,7 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
       if (!resolved[methodToInvoke]) {
         throw Error(`The method attempting to be invoked, '${methodToInvoke}', does not exist on the controller`);
       }
-      return resolved[methodToInvoke](req, ...rest);
+      return asyncErrorWrapper(resolved[methodToInvoke].bind(resolved))(req, ...rest);
     };
   };
 }
@@ -112,7 +112,7 @@ export function inject(factory: ClassOrFunctionReturning<any> | Resolver<any>) {
   return function middlewareFactoryHandler(req: any, ...rest: any[]) {
     const container: AwilixContainer = req.container;
     const resolved: any = container.build(resolver);
-    return resolved(req, ...rest);
+    return asyncErrorWrapper(resolved)(req, ...rest);
   };
 }
 
@@ -128,4 +128,23 @@ function getResolver<T>(
   }
 
   return arg;
+}
+
+/**
+ * Wraps a middleware, detects if it returns a Promise and calls next() with the caught error, if necessary.
+ * @param fn
+ */
+function asyncErrorWrapper(fn: (...args: any[]) => any): (...args: any[]) => any {
+  return function asyncWrappedMiddleware(req: Request, res: Response, next: NextFunction) {
+    const returnValue = fn(req, res, next);
+
+    if (returnValue && returnValue.catch && typeof returnValue.catch === "function") {
+      return returnValue.catch((err: any) => {
+        next(err);
+        throw err;
+      });
+    } else {
+      return returnValue;
+    }
+  };
 }
