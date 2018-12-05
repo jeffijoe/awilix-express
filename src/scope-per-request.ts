@@ -1,5 +1,5 @@
-import { AwilixContainer } from "awilix";
-import { Response, NextFunction } from "express";
+import { AwilixContainer } from 'awilix'
+import { Response, NextFunction } from 'express'
 
 /**
  * Express middleware factory that will create and attach
@@ -9,8 +9,12 @@ import { Response, NextFunction } from "express";
  * @return {Function}
  */
 export function scopePerRequest(container: AwilixContainer) {
-  return function scopePerRequestMiddleware(req: any, res: Response, next: NextFunction) {
-    req.container = container.createScope();
-    return next();
-  };
+  return function scopePerRequestMiddleware(
+    req: any,
+    res: Response,
+    next: NextFunction
+  ) {
+    req.container = container.createScope()
+    return next()
+  }
 }

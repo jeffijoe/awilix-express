@@ -1,4 +1,4 @@
-import { IOptions } from "glob";
+import { IOptions } from 'glob'
 import {
   rollUpState,
   findControllers,
@@ -6,16 +6,16 @@ import {
   getStateAndTarget,
   IStateAndTarget,
   IAwilixControllerBuilder
-} from "awilix-router-core";
-import { makeInvoker } from "./invokers";
-import { Router } from "express";
+} from 'awilix-router-core'
+import { makeInvoker } from './invokers'
+import { Router } from 'express'
 
 /**
  * Constructor type.
  */
 export type ConstructorOrControllerBuilder =
   | (new (...args: any[]) => any)
-  | IAwilixControllerBuilder;
+  | IAwilixControllerBuilder
 
 /**
  * Registers one or multiple decorated controller classes.
@@ -28,16 +28,16 @@ export function controller(
     | ConstructorOrControllerBuilder
     | ConstructorOrControllerBuilder[]
 ): Router {
-  const router = Router();
+  const router = Router()
   if (Array.isArray(ControllerClass)) {
-    ControllerClass.forEach((c) =>
+    ControllerClass.forEach(c =>
       _registerController(router, getStateAndTarget(c))
-    );
+    )
   } else {
-    _registerController(router, getStateAndTarget(ControllerClass));
+    _registerController(router, getStateAndTarget(ControllerClass))
   }
 
-  return router;
+  return router
 }
 
 /**
@@ -47,13 +47,13 @@ export function controller(
  * @param opts
  */
 export function loadControllers(pattern: string, opts?: IOptions): Router {
-  const router = Router();
+  const router = Router()
   findControllers(pattern, {
     ...opts,
     absolute: true
-  }).forEach(_registerController.bind(null, router));
+  }).forEach(_registerController.bind(null, router))
 
-  return router;
+  return router
 }
 
 /**
@@ -67,25 +67,25 @@ function _registerController(
   stateAndTarget: IStateAndTarget | null
 ): void {
   if (!stateAndTarget) {
-    return;
+    return
   }
 
-  const { state, target } = stateAndTarget;
-  const rolledUp = rollUpState(state);
+  const { state, target } = stateAndTarget
+  const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
-    methodCfg.verbs.forEach((httpVerb) => {
-      let method = httpVerb.toLowerCase();
+    methodCfg.verbs.forEach(httpVerb => {
+      let method = httpVerb.toLowerCase()
       if (httpVerb === HttpVerbs.ALL) {
-        method = "all";
+        method = 'all'
       }
 
-      (router as any)[method](
+      ;(router as any)[method](
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
         /*tslint:disable-next-line*/
         makeInvoker(target as any)(methodName),
         ...methodCfg.afterMiddleware
-      );
-    });
-  });
+      )
+    })
+  })
 }
