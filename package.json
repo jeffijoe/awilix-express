@@ -46,13 +46,13 @@
   },
   "homepage": "https://github.com/talyssonoc/awilix-express",
   "dependencies": {
-    "awilix-router-core": "^1.6.0",
+    "awilix-router-core": "^1.6.1",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
     "@types/glob": "^7.1.1",
-    "@types/jest": "^23.3.12",
+    "@types/jest": "^23.3.13",
     "@types/node": "^10.12.18",
     "@types/rimraf": "^2.0.2",
     "assert-request": "^1.0.6",
@@ -63,13 +63,13 @@
     "coveralls": "^3.0.2",
     "express": "^4.16.4",
     "jest": "^23.6.0",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.1",
     "rimraf": "^2.6.3",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.4"
   },
   "peerDependencies": {
     "awilix": "^4.0.0",
