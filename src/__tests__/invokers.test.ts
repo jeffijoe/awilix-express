@@ -83,14 +83,7 @@ describe('invokers', function() {
 
       const invoker = makeFunctionInvoker(target)
 
-      try {
-        await invoker('method')(request, 'response', nextSpy)
-        throw new Error('Should not be thrown')
-      } catch (ex) {
-        expect(ex).toBeDefined()
-        expect(ex.message).not.toEqual('Should not be thrown')
-        expect(ex.message).toEqual('42')
-      }
+      await invoker('method')(request, 'response', nextSpy)
 
       expect(nextSpy).toHaveBeenCalledTimes(1)
       expect(factorySpy).toHaveBeenCalledTimes(1)
@@ -170,14 +163,7 @@ describe('invokers', function() {
 
       const invoker = makeClassInvoker(Target)
 
-      try {
-        await invoker('method')(request, 'response', nextSpy)
-        throw new Error('Should not be thrown')
-      } catch (ex) {
-        expect(ex).toBeDefined()
-        expect(ex.message).not.toEqual('Should not be thrown')
-        expect(ex.message).toEqual('42')
-      }
+      await invoker('method')(request, 'response', nextSpy)
 
       expect(nextSpy).toHaveBeenCalledTimes(1)
       expect(constructorSpy).toHaveBeenCalledTimes(1)
@@ -258,14 +244,7 @@ describe('invokers', function() {
 
         const nextSpy = jest.fn()
 
-        try {
-          await converted(request, 'response', nextSpy)
-          throw new Error('Should not be thrown')
-        } catch (ex) {
-          expect(ex).toBeDefined()
-          expect(ex.message).not.toEqual('Should not be thrown')
-          expect(ex.message).toEqual('42')
-        }
+        await converted(request, 'response', nextSpy)
 
         expect(nextSpy).toHaveBeenCalledTimes(1)
         expect(constructorSpy).toHaveBeenCalledTimes(1)
