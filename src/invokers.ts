@@ -166,7 +166,6 @@ function asyncErrorWrapper(
     ) {
       return returnValue.catch((err: any) => {
         next(err)
-        throw err
       })
     } else {
       return returnValue
