@@ -5,7 +5,8 @@ import {
   HttpVerbs,
   getStateAndTarget,
   IStateAndTarget,
-  IAwilixControllerBuilder
+  IAwilixControllerBuilder,
+  ClassOrFunctionReturning
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
 import { Router } from 'express'
@@ -83,7 +84,7 @@ function _registerController(
         methodCfg.paths,
         ...methodCfg.beforeMiddleware,
         /*tslint:disable-next-line*/
-        makeInvoker(target as any)(methodName),
+        makeInvoker(target as ClassOrFunctionReturning<any>)(methodName as any),
         ...methodCfg.afterMiddleware
       )
     })

@@ -51,7 +51,7 @@ function createServer(spies: any) {
   const classAPI = makeClassInvoker(TestClass)
   router.get('/function', fnAPI('handle'))
   router.get('/class', classAPI('handle'))
-  router.get('/fail', fnAPI('not a method'))
+  router.get('/fail', fnAPI('not a method' as any))
   app.use(router)
 
   return new Promise((resolve, reject) => {
