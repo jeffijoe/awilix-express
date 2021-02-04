@@ -9,9 +9,12 @@ import {
   FunctionReturning
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
-import { NextFunction, Request, Response } from 'express'
-import { MethodName } from 'awilix-router-core'
+import { NextFunction, Request, Response, RequestHandler } from 'express'
 import assert = require('assert')
+
+export type RequestHandlerProps<T> = {
+  [K in keyof T]: T[K] extends RequestHandler ? K : never
+}[keyof T]
 
 /**
  * Creates either a function invoker or a class invoker, based on whether
@@ -82,7 +85,9 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
    * @param  {MethodName} methodToInvoke
    * @return {(req) => void}
    */
-  return function makeMemberInvoker(methodToInvoke: MethodName) {
+  return function makeMemberInvoker<K extends RequestHandlerProps<T>>(
+    methodToInvoke: K
+  ) {
     /**
      * The invoker middleware.
      *
@@ -90,7 +95,7 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
      * @param  {...*} rest
      * @return {*}
      */
-    return function memberInvoker(req: any, ...rest: any[]) {
+    return function memberInvoker(req: any, ...rest: any[]): ReturnType<T[K]> {
       const container: AwilixContainer = req.container
       const resolved: any = container.build(resolver)
       assert(
