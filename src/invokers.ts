@@ -10,7 +10,6 @@ import {
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
 import { NextFunction, Request, Response } from 'express'
-import { MethodName } from 'awilix-router-core'
 import assert = require('assert')
 
 /**
@@ -79,10 +78,10 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
    * 2nd step is to create a method to invoke on the result
    * of the resolver.
    *
-   * @param  {MethodName} methodToInvoke
+   * @param  methodToInvoke
    * @return {(req) => void}
    */
-  return function makeMemberInvoker(methodToInvoke: MethodName) {
+  return function makeMemberInvoker<K extends keyof T>(methodToInvoke: K) {
     /**
      * The invoker middleware.
      *
