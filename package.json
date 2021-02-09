@@ -13,6 +13,7 @@
     "test:watch": "jest --watchAll",
     "check": "tsc -p tsconfig.json --noEmit --pretty",
     "lint": "npm run build && tslint --project tsconfig.json --fix \"src/**/*.ts\" && prettier --write \"src/**/*.{ts,js}\"",
+    "lint:ci": "npm run build && tslint --project tsconfig.json \"src/**/*.ts\"",
     "cover": "jest --coverage",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "publish:pre": "npm run lint && npm run build && npm run cover",
