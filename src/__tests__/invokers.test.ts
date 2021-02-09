@@ -2,13 +2,13 @@ import { makeClassInvoker, makeFunctionInvoker, inject } from '../invokers'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 import * as Express from 'express'
 
-describe('invokers', function() {
+describe('invokers', function () {
   let container: AwilixContainer
   let methodSpy: any
   let factorySpy: any
   let constructorSpy: any
   let request: any
-  beforeEach(function() {
+  beforeEach(function () {
     factorySpy = jest.fn()
     constructorSpy = jest.fn()
     methodSpy = jest.fn()
@@ -17,8 +17,8 @@ describe('invokers', function() {
     request = { container }
   })
 
-  describe('makeFunctionInvoker', function() {
-    it('returns callable middleware', function() {
+  describe('makeFunctionInvoker', function () {
+    it('returns callable middleware', function () {
       function target({ param }: any) {
         factorySpy()
         const obj = {
@@ -26,7 +26,7 @@ describe('invokers', function() {
             methodSpy()
             expect(this).toBe(obj)
             return [req, param]
-          }
+          },
         }
         return obj
       }
@@ -42,7 +42,7 @@ describe('invokers', function() {
       expect(methodSpy).toHaveBeenCalledTimes(2)
     })
 
-    it('returns callable async middleware', async function() {
+    it('returns callable async middleware', async function () {
       function target({ param }: any) {
         factorySpy()
         const obj = {
@@ -50,7 +50,7 @@ describe('invokers', function() {
             methodSpy()
             expect(this).toBe(obj)
             return [req, param]
-          }
+          },
         }
         return obj
       }
@@ -66,7 +66,7 @@ describe('invokers', function() {
       expect(methodSpy).toHaveBeenCalledTimes(2)
     })
 
-    it('returns callable async middleware that handles errors', async function() {
+    it('returns callable async middleware that handles errors', async function () {
       function target({ param }: any) {
         factorySpy()
         const obj = {
@@ -74,7 +74,7 @@ describe('invokers', function() {
             methodSpy()
             expect(this).toBe(obj)
             throw new Error('42')
-          }
+          },
         }
         return obj
       }
@@ -91,8 +91,8 @@ describe('invokers', function() {
     })
   })
 
-  describe('makeClassInvoker', function() {
-    it('returns callable middleware', function() {
+  describe('makeClassInvoker', function () {
+    it('returns callable middleware', function () {
       class Target {
         param: any
         constructor({ param }: any) {
@@ -118,7 +118,7 @@ describe('invokers', function() {
       expect(methodSpy).toHaveBeenCalledTimes(2)
     })
 
-    it('returns callable async middleware', async function() {
+    it('returns callable async middleware', async function () {
       class Target {
         param: any
         constructor({ param }: any) {
@@ -144,7 +144,7 @@ describe('invokers', function() {
       expect(methodSpy).toHaveBeenCalledTimes(2)
     })
 
-    it('returns callable async middleware that handles errors', async function() {
+    it('returns callable async middleware that handles errors', async function () {
       class Target {
         param: any
         constructor({ param }: any) {
