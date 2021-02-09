@@ -6,7 +6,7 @@ import {
   getStateAndTarget,
   IStateAndTarget,
   IAwilixControllerBuilder,
-  ClassOrFunctionReturning
+  ClassOrFunctionReturning,
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
 import { Router } from 'express'
@@ -31,7 +31,7 @@ export function controller(
 ): Router {
   const router = Router()
   if (Array.isArray(ControllerClass)) {
-    ControllerClass.forEach(c =>
+    ControllerClass.forEach((c) =>
       _registerController(router, getStateAndTarget(c))
     )
   } else {
@@ -51,7 +51,7 @@ export function loadControllers(pattern: string, opts?: IOptions): Router {
   const router = Router()
   findControllers(pattern, {
     ...opts,
-    absolute: true
+    absolute: true,
   }).forEach(_registerController.bind(null, router))
 
   return router
@@ -74,7 +74,7 @@ function _registerController(
   const { state, target } = stateAndTarget
   const rolledUp = rollUpState(state)
   rolledUp.forEach((methodCfg, methodName) => {
-    methodCfg.verbs.forEach(httpVerb => {
+    methodCfg.verbs.forEach((httpVerb) => {
       let method = httpVerb.toLowerCase()
       if (httpVerb === HttpVerbs.ALL) {
         method = 'all'

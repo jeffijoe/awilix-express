@@ -6,7 +6,7 @@ import {
   Constructor,
   asClass,
   ClassOrFunctionReturning,
-  FunctionReturning
+  FunctionReturning,
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
 import { NextFunction, Request, Response } from 'express'
