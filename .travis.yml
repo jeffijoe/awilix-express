@@ -7,9 +7,8 @@ notifications:
 
 node_js:
   - 'stable'
+  - '14'
   - '12'
-  - '10'
-  - '8'
 
 # Lint errors should trigger a failure.
 before_script:
