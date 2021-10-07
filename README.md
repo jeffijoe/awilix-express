@@ -1,10 +1,10 @@
 # awilix-express
 
 [![npm version](https://badge.fury.io/js/awilix-express.svg)](https://badge.fury.io/js/awilix-express)
-[![Dependency Status](https://david-dm.org/talyssonoc/awilix-express.svg)](https://david-dm.org/talyssonoc/awilix-express)
-[![devDependency Status](https://david-dm.org/talyssonoc/awilix-express.svg)](https://david-dm.org/talyssonoc/awilix-express#info=devDependencies)
-[![Build Status](https://travis-ci.org/talyssonoc/awilix-express.svg?branch=master)](https://travis-ci.org/talyssonoc/awilix-express)
-[![Coverage Status](https://coveralls.io/repos/github/talyssonoc/awilix-express/badge.svg?branch=master)](https://coveralls.io/github/talyssonoc/awilix-express?branch=master)
+[![Dependency Status](https://david-dm.org/jeffijoe/awilix-express.svg)](https://david-dm.org/jeffijoe/awilix-express)
+[![devDependency Status](https://david-dm.org/jeffijoe/awilix-express.svg)](https://david-dm.org/jeffijoe/awilix-express#info=devDependencies)
+[![Build Status](https://travis-ci.org/jeffijoe/awilix-express.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-express)
+[![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-express/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-express?branch=master)
 ![Typings Included](https://img.shields.io/badge/typings-included-brightgreen.svg)
 
 Awilix helpers, router and scope-instantiating middleware for **Express**. 🐨
@@ -13,16 +13,18 @@ Awilix helpers, router and scope-instantiating middleware for **Express**. 🐨
 
 # Table of Contents
 
-* [Installation](#installation)
-* [Basic Usage](#basic-usage)
-* [Awesome Usage](#awesome-usage)
-* [Why do I need it?](#why-do-i-need-it)
-  * [Manual](#manual)
-  * [Using awilix-express](#using-awilix-express)
-* [API](#api)
-* [Contributing](#contributing)
-  * [npm run scripts](#npm-run-scripts)
-* [Author](#author)
+- [awilix-express](#awilix-express)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Awesome Usage](#awesome-usage)
+- [Why do I need it?](#why-do-i-need-it)
+  - [Manual](#manual)
+  - [Using `awilix-express`](#using-awilix-express)
+- [API](#api)
+- [Contributing](#contributing)
+  - [`npm run` scripts](#npm-run-scripts)
+- [Author](#author)
 
 # Installation
 
@@ -391,6 +393,7 @@ app.use(
 
 # Author
 
-Talysson Oliveira Cassiano - [@talyssonoc](https://twitter.com/talyssonoc)
+* Talysson Oliveira Cassiano - [@talyssonoc](https://twitter.com/talyssonoc)
+* Jeff Hansen - [@jeffijoe](https://twitter.com/jeffijoe)
 
 [awilix-router-core]: https://github.com/jeffijoe/awilix-router-core
