@@ -6,7 +6,8 @@ notifications:
   email: false
 
 node_js:
-  - 'stable'
+  # - 'stable'
+  - '16'
   - '14'
   - '12'
 
