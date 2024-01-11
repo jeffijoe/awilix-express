@@ -1,4 +1,4 @@
-import { IOptions } from 'glob'
+import { GlobOptions } from 'glob'
 import {
   rollUpState,
   findControllers,
@@ -47,7 +47,7 @@ export function controller(
  * @param pattern
  * @param opts
  */
-export function loadControllers(pattern: string, opts?: IOptions): Router {
+export function loadControllers(pattern: string, opts?: GlobOptions): Router {
   const router = Router()
   findControllers(pattern, {
     ...opts,
