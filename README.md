@@ -1,9 +1,7 @@
 # awilix-express
 
 [![npm version](https://badge.fury.io/js/awilix-express.svg)](https://badge.fury.io/js/awilix-express)
-[![Dependency Status](https://david-dm.org/jeffijoe/awilix-express.svg)](https://david-dm.org/jeffijoe/awilix-express)
-[![devDependency Status](https://david-dm.org/jeffijoe/awilix-express.svg)](https://david-dm.org/jeffijoe/awilix-express#info=devDependencies)
-[![Build Status](https://travis-ci.org/jeffijoe/awilix-express.svg?branch=master)](https://travis-ci.org/jeffijoe/awilix-express)
+[![CI](https://github.com/jeffijoe/awilix-express/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffijoe/awilix-express/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/jeffijoe/awilix-express/badge.svg?branch=master)](https://coveralls.io/github/jeffijoe/awilix-express?branch=master)
 ![Typings Included](https://img.shields.io/badge/typings-included-brightgreen.svg)
 
@@ -39,7 +37,7 @@ _Requires Node v6 or above_
 Add the middleware to your Express app.
 
 ```js
-const { asClass, asValue, createContainer} = require('awilix')
+const { asClass, asValue, createContainer } = require('awilix')
 const { scopePerRequest } = require('awilix-express')
 
 const container = createContainer()
@@ -47,7 +45,7 @@ container.register({
   // Scoped lifetime = new instance per request
   // Imagine the TodosService needs a `user`.
   // class TodosService { constructor({ user }) { } }
-  todosService: asClass(TodosService).scoped()
+  todosService: asClass(TodosService).scoped(),
 })
 
 // Add the middleware, passing it your Awilix container.
@@ -57,7 +55,7 @@ app.use(scopePerRequest(container))
 // Now you can add request-specific data to the scope.
 app.use((req, res, next) => {
   req.container.register({
-    user: asValue(req.user) // from some authentication middleware...
+    user: asValue(req.user), // from some authentication middleware...
   })
 
   return next()
@@ -72,10 +70,10 @@ const { makeInvoker } = require('awilix-express')
 function makeAPI({ todosService }) {
   return {
     find: (req, res) => {
-      return todosService.find().then(result => {
+      return todosService.find().then((result) => {
         res.send(result)
       })
-    }
+    },
   }
 }
 
@@ -106,7 +104,7 @@ const API = ({ todoService }) => ({
   },
   createTodo: async (req, res) => {
     res.send(await todoService.create(req.body))
-  }
+  },
 })
 
 export default createController(API)
@@ -115,7 +113,7 @@ export default createController(API)
   .get('/:id', 'getTodo') // Maps `GET /todos/:id` to the `getTodo` function on the returned object from `API`
   .post('', 'createTodo', {
     // Maps `POST /todos` to the `createTodo` function on the returned object from `API`
-    before: [bodyParser()] // Runs the bodyParser just for this endpoint
+    before: [bodyParser()], // Runs the bodyParser just for this endpoint
   })
 ```
 
@@ -155,10 +153,9 @@ import { asClass, createContainer } from 'awilix'
 import { loadControllers, scopePerRequest } from 'awilix-express'
 
 const app = Express()
-const container = createContainer()
-  .register({
-    userService: asClass(/*...*/),
-    todoService: asClass(/*...*/)
+const container = createContainer().register({
+  userService: asClass(/*...*/),
+  todoService: asClass(/*...*/),
 })
 app.use(scopePerRequest(container))
 // Loads all controllers in the `routes` folder
@@ -199,7 +196,7 @@ class TodoAPI {
     this.todosService = todosService
   }
   getTodos(req, res) {
-    return this.todosService.getTodos().then(todos => res.send(todos))
+    return this.todosService.getTodos().then((todos) => res.send(todos))
   }
 }
 ```
@@ -220,8 +217,8 @@ router.get('/todos', (req, res) => {
     todosService: new TodosService({
       db,
       // current user is request specific.
-      currentUser: req.user
-    })
+      currentUser: req.user,
+    }),
   })
 
   // invoke the method.
@@ -243,8 +240,8 @@ container.loadModules(['services/*.js'], {
   resolverOptions: {
     // We want instances to be scoped to the Express request.
     // We need to set that up.
-    lifetime: Lifetime.SCOPED
-  }
+    lifetime: Lifetime.SCOPED,
+  },
 })
 
 // imagination is a wonderful thing.
@@ -257,7 +254,7 @@ app.use((req, res, next) => {
   req.container = container.createScope()
   // The `TodosService` needs `currentUser`
   req.container.register({
-    currentUser: asValue(req.user) // from auth middleware... IMAGINATION!! :D
+    currentUser: asValue(req.user), // from auth middleware... IMAGINATION!! :D
   })
   return next()
 })
@@ -266,7 +263,7 @@ app.use((req, res, next) => {
 Okay! Let's try setting up that API again!
 
 ```js
-export default function(router) {
+export default function (router) {
   router.get('/todos', (req, res) => {
     // We have our scope available!
     const api = new TodoAPI(req.container.cradle) // Awilix magic!
@@ -278,13 +275,13 @@ export default function(router) {
 A lot cleaner, but we can make this even shorter!
 
 ```js
-export default function(router) {
+export default function (router) {
   // Just invoke `api` with the method name and
   // you've got yourself a middleware that instantiates
   // the API and calls the method.
-  const api = methodName => {
+  const api = (methodName) => {
     // create our handler
-    return function(req, res) {
+    return function (req, res) {
       const controller = new TodoAPI(req.container.cradle)
       return controller[method](req, res)
     }
@@ -302,7 +299,7 @@ In our route handler, do the following:
 ```js
 import { makeInvoker } from 'awilix-express'
 
-export default function(router) {
+export default function (router) {
   const api = makeInvoker(TodoAPI)
   router.get('/todos', api('getTodos'))
 }
@@ -319,12 +316,12 @@ const container = createContainer()
 // The `TodosService` lives in services/TodosService
 container.loadModules(
   [
-    ['services/*.js', Lifetime.SCOPED] // shortcut to make all services scoped
+    ['services/*.js', Lifetime.SCOPED], // shortcut to make all services scoped
   ],
   {
     // we want `TodosService` to be registered as `todosService`.
-    formatName: 'camelCase'
-  }
+    formatName: 'camelCase',
+  },
 )
 
 // imagination is a wonderful thing.
@@ -336,7 +333,7 @@ app.use((req, res, next) => {
   // We still want to register the user!
   // req.container is a scope!
   req.container.register({
-    currentUser: asValue(req.user) // from auth middleware... IMAGINATION!! :D
+    currentUser: asValue(req.user), // from auth middleware... IMAGINATION!! :D
   })
 })
 ```
@@ -349,12 +346,12 @@ import { makeInvoker } from 'awilix-express'
 function makeTodoAPI({ todosService }) {
   return {
     getTodos: (req, res) => {
-      return todosService.getTodos().then(todos => res.send(todos))
-    }
+      return todosService.getTodos().then((todos) => res.send(todos))
+    },
   }
 }
 
-export default function(router) {
+export default function (router) {
   const api = makeInvoker(makeTodoAPI)
   router.get('/api/todos', api('getTodos'))
 }
@@ -366,20 +363,20 @@ That concludes the tutorial! Hope you find it useful, I know I have.
 
 The package exports everything from `awilix-router-core` as well as the following **Express middleware factories**:
 
-* `scopePerRequest(container)`: creates a scope per request.
-* `controller(decoratedClassOrController)`: registers routes and delegates to Express.Router.
-* `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
-* `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
-* `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.
-* `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.
-* `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
-* `inject(middlewareFactory)`: resolves the middleware per request.
+- `scopePerRequest(container)`: creates a scope per request.
+- `controller(decoratedClassOrController)`: registers routes and delegates to Express.Router.
+- `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+- `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
+- `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.
+- `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.
+- `makeResolverInvoker(resolver, opts)`: used by the other invokers, exported for convenience.
+- `inject(middlewareFactory)`: resolves the middleware per request.
 
 ```js
 app.use(
   inject(({ userService }) => (req, res, next) => {
     /**/
-  })
+  }),
 )
 ```
 
@@ -387,13 +384,13 @@ app.use(
 
 ## `npm run` scripts
 
-* `npm run test`: Runs tests once
-* `npm run lint`: Lints + formats the code once
-* `npm run cover`: Runs code coverage using `istanbul`
+- `npm run test`: Runs tests once
+- `npm run lint`: Lints + formats the code once
+- `npm run cover`: Runs code coverage using `istanbul`
 
 # Author
 
-* Talysson Oliveira Cassiano - [@talyssonoc](https://twitter.com/talyssonoc)
-* Jeff Hansen - [@jeffijoe](https://twitter.com/jeffijoe)
+- Talysson Oliveira Cassiano - [@talyssonoc](https://twitter.com/talyssonoc)
+- Jeff Hansen - [@jeffijoe](https://twitter.com/jeffijoe)
 
 [awilix-router-core]: https://github.com/jeffijoe/awilix-router-core
