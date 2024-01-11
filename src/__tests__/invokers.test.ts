@@ -12,7 +12,7 @@ describe('invokers', function () {
     factorySpy = jest.fn()
     constructorSpy = jest.fn()
     methodSpy = jest.fn()
-    container = createContainer()
+    container = createContainer({ strict: true })
     container.register('param', asValue(42))
     request = { container }
   })
@@ -201,7 +201,7 @@ describe('invokers', function () {
               methodSpy()
               return [req, param, additional]
             }
-          })
+          }),
         )
 
         // Call it twice.

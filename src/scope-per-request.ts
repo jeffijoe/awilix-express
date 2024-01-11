@@ -12,7 +12,7 @@ export function scopePerRequest(container: AwilixContainer) {
   return function scopePerRequestMiddleware(
     req: any,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     req.container = container.createScope()
     return next()

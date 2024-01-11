@@ -48,7 +48,9 @@ describe('controller registration', () => {
 
 function createServer(): Promise<[http.Server, any]> {
   const app = Express()
-  const container = createContainer().register({
+  const container = createContainer({
+    strict: true,
+  }).register({
     service: asFunction(() => ({ get: (message: string) => ({ message }) })),
   })
   app.use(scopePerRequest(container))
@@ -62,8 +64,8 @@ function createServer(): Promise<[http.Server, any]> {
           res.send(service.get('func')),
       }))
         .prefix('/func')
-        .get('', 'func')
-    )
+        .get('', 'func'),
+    ),
   )
 
   return new Promise((resolve) => {

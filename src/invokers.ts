@@ -24,7 +24,7 @@ import assert = require('assert')
  */
 export function makeInvoker<T>(
   functionOrClass: ClassOrFunctionReturning<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return isClass(functionOrClass)
     ? /*tslint:disable-next-line*/
@@ -45,7 +45,7 @@ export function makeInvoker<T>(
  */
 export function makeFunctionInvoker<T>(
   fn: FunctionReturning<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return makeResolverInvoker(asFunction(fn, opts))
 }
@@ -58,7 +58,7 @@ export function makeFunctionInvoker<T>(
  */
 export function makeClassInvoker<T>(
   Class: Constructor<T>,
-  opts?: ResolverOptions<T>
+  opts?: ResolverOptions<T>,
 ) {
   return makeResolverInvoker(asClass(Class, opts))
 }
@@ -95,19 +95,19 @@ export function makeResolverInvoker<T>(resolver: Resolver<T>) {
       assert(
         methodToInvoke,
         `methodToInvoke must be a valid method type, such as string, number or symbol, but was ${String(
-          methodToInvoke
-        )}`
+          methodToInvoke,
+        )}`,
       )
       if (!resolved[methodToInvoke!]) {
         throw Error(
           `The method attempting to be invoked, '${String(
-            methodToInvoke
-          )}', does not exist on the controller`
+            methodToInvoke,
+          )}', does not exist on the controller`,
         )
       }
       return asyncErrorWrapper(resolved[methodToInvoke!].bind(resolved))(
         req,
-        ...rest
+        ...rest,
       )
     }
   }
@@ -134,7 +134,7 @@ export function inject(factory: ClassOrFunctionReturning<any> | Resolver<any>) {
  * Wraps or returns a resolver.
  */
 function getResolver<T>(
-  arg: ClassOrFunctionReturning<T> | Resolver<T>
+  arg: ClassOrFunctionReturning<T> | Resolver<T>,
 ): Resolver<T> {
   if (typeof arg === 'function') {
     /*tslint:disable-next-line*/
@@ -149,12 +149,12 @@ function getResolver<T>(
  * @param fn
  */
 function asyncErrorWrapper(
-  fn: (...args: any[]) => any
+  fn: (...args: any[]) => any,
 ): (...args: any[]) => any {
   return function asyncWrappedMiddleware(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     const returnValue = fn(req, res, next)
 

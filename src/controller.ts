@@ -27,12 +27,12 @@ export type ConstructorOrControllerBuilder =
 export function controller(
   ControllerClass:
     | ConstructorOrControllerBuilder
-    | ConstructorOrControllerBuilder[]
+    | ConstructorOrControllerBuilder[],
 ): Router {
   const router = Router()
   if (Array.isArray(ControllerClass)) {
     ControllerClass.forEach((c) =>
-      _registerController(router, getStateAndTarget(c))
+      _registerController(router, getStateAndTarget(c)),
     )
   } else {
     _registerController(router, getStateAndTarget(ControllerClass))
@@ -65,7 +65,7 @@ export function loadControllers(pattern: string, opts?: IOptions): Router {
  */
 function _registerController(
   router: Router,
-  stateAndTarget: IStateAndTarget | null
+  stateAndTarget: IStateAndTarget | null,
 ): void {
   if (!stateAndTarget) {
     return
@@ -85,7 +85,7 @@ function _registerController(
         ...methodCfg.beforeMiddleware,
         /*tslint:disable-next-line*/
         makeInvoker(target as ClassOrFunctionReturning<any>)(methodName as any),
-        ...methodCfg.afterMiddleware
+        ...methodCfg.afterMiddleware,
       )
     })
   })

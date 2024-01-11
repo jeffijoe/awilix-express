@@ -34,16 +34,17 @@ function createServer(spies: any) {
   const app = Express()
   const router = Express.Router()
 
-  const container = createContainer()
+  const container = createContainer({
+    strict: true,
+  })
     .register({
       testService: asClass(TestService).scoped(),
     })
-    // These will be registered as transient.
     .register(
       Object.keys(spies).reduce((obj: any, key) => {
-        obj[key] = asFunction(spies[key])
+        obj[key] = asFunction(spies[key]).scoped()
         return obj
-      }, {})
+      }, {}),
     )
   app.use(scopePerRequest(container))
 
@@ -55,8 +56,9 @@ function createServer(spies: any) {
   app.use(router)
 
   return new Promise((resolve, reject) => {
-    let server: any
-    server = app.listen((err: any) => (err ? reject(err) : resolve(server)))
+    const server = app.listen((err: any) =>
+      err ? reject(err) : resolve(server),
+    )
   })
 }
 

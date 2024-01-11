@@ -4,7 +4,7 @@ import * as Express from 'express'
 
 describe('scopePerRequest', function () {
   it('returns a middleware that creates a scope and attaches it to a context + calls next', function () {
-    const container = createContainer()
+    const container = createContainer({ strict: true })
     const middleware = scopePerRequest(container)
     const next = jest.fn(() => 42)
     const req = {} as any
