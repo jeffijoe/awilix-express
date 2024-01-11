@@ -30,8 +30,6 @@ Awilix helpers, router and scope-instantiating middleware for **Express**. 🐨
 npm install --save awilix-express
 ```
 
-_Requires Node v6 or above_
-
 # Basic Usage
 
 Add the middleware to your Express app.
