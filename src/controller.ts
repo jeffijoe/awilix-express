@@ -1,4 +1,3 @@
-import { IOptions } from 'glob'
 import {
   rollUpState,
   findControllers,
@@ -7,6 +6,7 @@ import {
   IStateAndTarget,
   IAwilixControllerBuilder,
   ClassOrFunctionReturning,
+  FindControllersOptions,
 } from 'awilix-router-core'
 import { makeInvoker } from './invokers'
 import { Router } from 'express'
@@ -47,7 +47,10 @@ export function controller(
  * @param pattern
  * @param opts
  */
-export function loadControllers(pattern: string, opts?: IOptions): Router {
+export function loadControllers(
+  pattern: string,
+  opts?: FindControllersOptions,
+): Router {
   const router = Router()
   findControllers(pattern, {
     ...opts,
