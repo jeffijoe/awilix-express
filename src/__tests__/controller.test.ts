@@ -6,6 +6,7 @@ import { createContainer, asFunction } from 'awilix'
 import { route, GET, createController } from '../'
 import { AddressInfo } from 'net'
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const AssertRequest = require('assert-request')
 
 describe('controller registration', () => {

@@ -42,7 +42,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Lint
+      - if: ${{ matrix.version == 'current' }}
+        name: Lint
         run: npm run lint
 
       - name: Test

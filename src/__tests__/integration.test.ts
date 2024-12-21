@@ -1,6 +1,8 @@
 import * as Express from 'express'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const AssertRequest = require('assert-request')
 
 class TestService {
