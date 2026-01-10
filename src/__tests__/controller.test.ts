@@ -1,4 +1,4 @@
-import * as Express from 'express'
+import express, { Response } from 'express'
 import * as http from 'http'
 import { loadControllers, controller } from '../controller'
 import { scopePerRequest } from '../scope-per-request'
@@ -6,7 +6,6 @@ import { createContainer, asFunction } from 'awilix'
 import { route, GET, createController } from '../'
 import { AddressInfo } from 'net'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const AssertRequest = require('assert-request')
 
 describe('controller registration', () => {
@@ -48,7 +47,7 @@ describe('controller registration', () => {
 })
 
 function createServer(): Promise<[http.Server, any]> {
-  const app = Express()
+  const app = express()
   const container = createContainer({
     strict: true,
   }).register({
@@ -61,8 +60,7 @@ function createServer(): Promise<[http.Server, any]> {
   app.use(
     controller(
       createController(({ service }: any) => ({
-        func: (req: any, res: Express.Response) =>
-          res.send(service.get('func')),
+        func: (req: any, res: Response) => res.send(service.get('func')),
       }))
         .prefix('/func')
         .get('', 'func'),
@@ -82,7 +80,7 @@ class Nothing {}
 class PlainController {
   @route('/ping')
   @GET()
-  ping(req: any, res: Express.Response) {
+  ping(req: any, res: Response) {
     res.send({ message: 'pong' })
   }
 }

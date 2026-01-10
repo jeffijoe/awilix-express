@@ -10,7 +10,7 @@ import {
 } from 'awilix'
 import { isClass } from 'awilix/lib/utils'
 import { NextFunction, Request, Response } from 'express'
-import * as assert from 'assert'
+import assert from 'assert'
 
 /**
  * Creates either a function invoker or a class invoker, based on whether
