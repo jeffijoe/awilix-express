@@ -1,8 +1,7 @@
-import * as Express from 'express'
+import express, { Response, Router } from 'express'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const AssertRequest = require('assert-request')
 
 class TestService {
@@ -16,7 +15,7 @@ class TestClass {
     /**/
   }
 
-  handle(req: any, res: Express.Response) {
+  handle(req: any, res: Response) {
     res.send({ success: true })
   }
 }
@@ -26,15 +25,15 @@ function testFactoryFunction({
   testService,
 }: any) {
   return {
-    handle(req: any, res: Express.Response) {
+    handle(req: any, res: Response) {
       res.send({ success: true })
     },
   }
 }
 
 function createServer(spies: any) {
-  const app = Express()
-  const router = Express.Router()
+  const app = express()
+  const router = Router()
 
   const container = createContainer({
     strict: true,
