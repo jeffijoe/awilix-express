@@ -143,7 +143,7 @@ export default class UserAPI {
 }
 ```
 
-**`server.js`**
+**`server.js`** - CommonJS / synchronous
 
 ```js
 import Express from 'express'
@@ -160,6 +160,26 @@ app.use(scopePerRequest(container))
 // relative to the current working directory.
 // This is a glob pattern.
 app.use(loadControllers('routes/*.js', { cwd: __dirname }))
+
+app.listen(3000)
+```
+
+**`server.js`** - ESM / async
+
+When using ES modules, pass `esModules: true`. This makes `loadControllers` return a `Promise<Router>`, so you'll need to `await` it.
+
+```js
+import Express from 'express'
+import { asClass, createContainer } from 'awilix'
+import { loadControllers, scopePerRequest } from 'awilix-express'
+
+const app = Express()
+const container = createContainer().register({
+  userService: asClass(/*...*/),
+  todoService: asClass(/*...*/),
+})
+app.use(scopePerRequest(container))
+app.use(await loadControllers('routes/*.js', { esModules: true }))
 
 app.listen(3000)
 ```
@@ -363,7 +383,7 @@ The package exports everything from `awilix-router-core` as well as the followin
 
 - `scopePerRequest(container)`: creates a scope per request.
 - `controller(decoratedClassOrController)`: registers routes and delegates to Express.Router.
-- `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers.
+- `loadControllers(pattern, opts)`: loads files matching a glob pattern and registers their exports as controllers. Supports `opts.esModules: true` for ESM projects — when enabled, returns a `Promise<Router>` instead of `Router`.
 - `makeInvoker(functionOrClass, opts)(methodName)`: using `isClass`, calls either `makeFunctionInvoker` or `makeClassInvoker`.
 - `makeClassInvoker(Class, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.
 - `makeFunctionInvoker(function, opts)(methodName)`: resolves & calls `methodName` on the resolved instance, passing it `req`, `res` and `next`.

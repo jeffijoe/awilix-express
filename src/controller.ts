@@ -1,6 +1,7 @@
 import {
   rollUpState,
   findControllers,
+  FindControllersResult,
   HttpVerbs,
   getStateAndTarget,
   IStateAndTarget,
@@ -47,17 +48,26 @@ export function controller(
  * @param pattern
  * @param opts
  */
-export function loadControllers(
+export function loadControllers<ESM extends boolean = false>(
   pattern: string,
-  opts?: FindControllersOptions,
-): Router {
-  const router = Router()
-  findControllers(pattern, {
-    ...opts,
-    absolute: true,
-  }).forEach(_registerController.bind(null, router))
+  opts?: FindControllersOptions<ESM>,
+): ESM extends true ? Promise<Router> : Router {
+  const findOpts = { ...opts, absolute: true }
+  const result = findControllers(pattern, findOpts)
 
-  return router
+  if (opts?.esModules) {
+    return (result as Promise<FindControllersResult>).then((found) => {
+      const router = Router()
+      found.forEach(_registerController.bind(null, router))
+      return router
+    }) as any
+  }
+
+  const router = Router()
+  ;(result as FindControllersResult).forEach(
+    _registerController.bind(null, router),
+  )
+  return router as any
 }
 
 /**
