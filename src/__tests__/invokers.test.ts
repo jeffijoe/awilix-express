@@ -1,3 +1,5 @@
+import { describe, it, beforeEach, mock } from 'node:test'
+import assert from 'node:assert/strict'
 import { makeClassInvoker, makeFunctionInvoker, inject } from '../invokers'
 import { createContainer, AwilixContainer, asValue, asFunction } from 'awilix'
 import * as Express from 'express'
@@ -9,9 +11,9 @@ describe('invokers', function () {
   let constructorSpy: any
   let request: any
   beforeEach(function () {
-    factorySpy = jest.fn()
-    constructorSpy = jest.fn()
-    methodSpy = jest.fn()
+    factorySpy = mock.fn()
+    constructorSpy = mock.fn()
+    methodSpy = mock.fn()
     container = createContainer({ strict: true })
     container.register('param', asValue(42))
     request = { container }
@@ -24,7 +26,7 @@ describe('invokers', function () {
         const obj = {
           method(req: any, res: Express.Response) {
             methodSpy()
-            expect(this).toBe(obj)
+            assert.strictEqual(this, obj)
             return [req, param]
           },
         }
@@ -37,9 +39,9 @@ describe('invokers', function () {
       invoker('method')(request)
       const result = invoker('method')(request)
 
-      expect(result).toEqual([request, 42])
-      expect(factorySpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [request, 42])
+      assert.strictEqual(factorySpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
 
     it('returns callable async middleware', async function () {
@@ -48,7 +50,7 @@ describe('invokers', function () {
         const obj = {
           async method(req: any, res: Express.Response) {
             methodSpy()
-            expect(this).toBe(obj)
+            assert.strictEqual(this, obj)
             return [req, param]
           },
         }
@@ -61,9 +63,9 @@ describe('invokers', function () {
       await invoker('method')(request)
       const result = await invoker('method')(request)
 
-      expect(result).toEqual([request, 42])
-      expect(factorySpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [request, 42])
+      assert.strictEqual(factorySpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
 
     it('returns callable async middleware that handles errors', async function () {
@@ -72,22 +74,22 @@ describe('invokers', function () {
         const obj = {
           async method(req: any, res: Express.Response) {
             methodSpy()
-            expect(this).toBe(obj)
+            assert.strictEqual(this, obj)
             throw new Error('42')
           },
         }
         return obj
       }
 
-      const nextSpy = jest.fn()
+      const nextSpy = mock.fn()
 
       const invoker = makeFunctionInvoker(target)
 
       await invoker('method')(request, 'response', nextSpy)
 
-      expect(nextSpy).toHaveBeenCalledTimes(1)
-      expect(factorySpy).toHaveBeenCalledTimes(1)
-      expect(methodSpy).toHaveBeenCalledTimes(1)
+      assert.strictEqual(nextSpy.mock.callCount(), 1)
+      assert.strictEqual(factorySpy.mock.callCount(), 1)
+      assert.strictEqual(methodSpy.mock.callCount(), 1)
     })
   })
 
@@ -102,7 +104,7 @@ describe('invokers', function () {
 
         method(req: any, additional: any) {
           methodSpy()
-          expect(this).toBeInstanceOf(Target)
+          assert.ok(this instanceof Target)
           return [req, this.param, additional]
         }
       }
@@ -113,9 +115,9 @@ describe('invokers', function () {
       invoker('method')(request, 'hello')
       const result = invoker('method')(request, 'hello')
 
-      expect(result).toEqual([request, 42, 'hello'])
-      expect(constructorSpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [request, 42, 'hello'])
+      assert.strictEqual(constructorSpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
 
     it('returns callable async middleware', async function () {
@@ -128,7 +130,7 @@ describe('invokers', function () {
 
         async method(req: any, additional: any) {
           methodSpy()
-          expect(this).toBeInstanceOf(Target)
+          assert.ok(this instanceof Target)
           return [req, this.param, additional]
         }
       }
@@ -139,9 +141,9 @@ describe('invokers', function () {
       await invoker('method')(request, 'hello')
       const result = await invoker('method')(request, 'hello')
 
-      expect(result).toEqual([request, 42, 'hello'])
-      expect(constructorSpy).toHaveBeenCalledTimes(2)
-      expect(methodSpy).toHaveBeenCalledTimes(2)
+      assert.deepStrictEqual(result, [request, 42, 'hello'])
+      assert.strictEqual(constructorSpy.mock.callCount(), 2)
+      assert.strictEqual(methodSpy.mock.callCount(), 2)
     })
 
     it('returns callable async middleware that handles errors', async function () {
@@ -154,20 +156,20 @@ describe('invokers', function () {
 
         async method(req: any, additional: any) {
           methodSpy()
-          expect(this).toBeInstanceOf(Target)
+          assert.ok(this instanceof Target)
           throw new Error('42')
         }
       }
 
-      const nextSpy = jest.fn()
+      const nextSpy = mock.fn()
 
       const invoker = makeClassInvoker(Target)
 
       await invoker('method')(request, 'response', nextSpy)
 
-      expect(nextSpy).toHaveBeenCalledTimes(1)
-      expect(constructorSpy).toHaveBeenCalledTimes(1)
-      expect(methodSpy).toHaveBeenCalledTimes(1)
+      assert.strictEqual(nextSpy.mock.callCount(), 1)
+      assert.strictEqual(constructorSpy.mock.callCount(), 1)
+      assert.strictEqual(methodSpy.mock.callCount(), 1)
     })
   })
 
@@ -186,9 +188,9 @@ describe('invokers', function () {
         converted(request, 'hello')
         const result = converted(request, 'hello')
 
-        expect(result).toEqual([request, 42, 'hello'])
-        expect(constructorSpy).toHaveBeenCalledTimes(2)
-        expect(methodSpy).toHaveBeenCalledTimes(2)
+        assert.deepStrictEqual(result, [request, 42, 'hello'])
+        assert.strictEqual(constructorSpy.mock.callCount(), 2)
+        assert.strictEqual(methodSpy.mock.callCount(), 2)
       })
     })
 
@@ -208,9 +210,9 @@ describe('invokers', function () {
         converted(request, 'hello')
         const result = converted(request, 'hello')
 
-        expect(result).toEqual([request, 42, 'hello'])
-        expect(constructorSpy).toHaveBeenCalledTimes(2)
-        expect(methodSpy).toHaveBeenCalledTimes(2)
+        assert.deepStrictEqual(result, [request, 42, 'hello'])
+        assert.strictEqual(constructorSpy.mock.callCount(), 2)
+        assert.strictEqual(methodSpy.mock.callCount(), 2)
       })
     })
 
@@ -228,9 +230,9 @@ describe('invokers', function () {
         await converted(request, 'hello')
         const result = await converted(request, 'hello')
 
-        expect(result).toEqual([request, 42, 'hello'])
-        expect(constructorSpy).toHaveBeenCalledTimes(2)
-        expect(methodSpy).toHaveBeenCalledTimes(2)
+        assert.deepStrictEqual(result, [request, 42, 'hello'])
+        assert.strictEqual(constructorSpy.mock.callCount(), 2)
+        assert.strictEqual(methodSpy.mock.callCount(), 2)
       })
 
       it('converts function to resolver returns callable middleware that handles errors', async () => {
@@ -242,13 +244,13 @@ describe('invokers', function () {
           }
         })
 
-        const nextSpy = jest.fn()
+        const nextSpy = mock.fn()
 
         await converted(request, 'response', nextSpy)
 
-        expect(nextSpy).toHaveBeenCalledTimes(1)
-        expect(constructorSpy).toHaveBeenCalledTimes(1)
-        expect(methodSpy).toHaveBeenCalledTimes(1)
+        assert.strictEqual(nextSpy.mock.callCount(), 1)
+        assert.strictEqual(constructorSpy.mock.callCount(), 1)
+        assert.strictEqual(methodSpy.mock.callCount(), 1)
       })
     })
   })

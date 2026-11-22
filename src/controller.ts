@@ -16,8 +16,7 @@ import { Router } from 'express'
  * Constructor type.
  */
 export type ConstructorOrControllerBuilder =
-  | (new (...args: any[]) => any)
-  | IAwilixControllerBuilder
+  (new (...args: any[]) => any) | IAwilixControllerBuilder
 
 /**
  * Registers one or multiple decorated controller classes.
@@ -27,8 +26,7 @@ export type ConstructorOrControllerBuilder =
  */
 export function controller(
   ControllerClass:
-    | ConstructorOrControllerBuilder
-    | ConstructorOrControllerBuilder[],
+    ConstructorOrControllerBuilder | ConstructorOrControllerBuilder[],
 ): Router {
   const router = Router()
   if (Array.isArray(ControllerClass)) {

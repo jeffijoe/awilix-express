@@ -1,14 +1,13 @@
 import typescript from '@rollup/plugin-typescript'
-import { readFileSync } from 'fs'
-
-const tsconfig = JSON.parse(readFileSync('./tsconfig.json', 'utf8'))
 
 const tsOpts = {
+  tsconfig: './tsconfig.build.json',
   compilerOptions: {
-    ...tsconfig.compilerOptions,
     module: 'ESNext',
+    moduleResolution: 'bundler',
     target: 'ES2021',
     declaration: false,
+    outDir: undefined,
   },
   exclude: ['**/__tests__/**'],
 }
@@ -21,13 +20,7 @@ export default [
       format: 'es',
       sourcemap: true,
     },
-    external: [
-      'awilix-router-core',
-      'express',
-      'awilix',
-      'awilix/lib/utils',
-      'assert',
-    ],
+    external: ['awilix-router-core', 'express', 'awilix', 'assert'],
     plugins: [typescript(tsOpts)],
     treeshake: { moduleSideEffects: 'no-external' },
   },
