@@ -1,8 +1,10 @@
+import { describe, it, beforeEach, afterEach, mock } from 'node:test'
+import assert from 'node:assert/strict'
 import express, { Response, Router } from 'express'
 import { scopePerRequest, makeInvoker, makeClassInvoker } from '../'
 import { createContainer, asClass, asFunction } from 'awilix'
 
-const AssertRequest = require('assert-request')
+import { requestFrom } from './request'
 
 class TestService {
   constructor({ serviceConstructor }: any) {
@@ -64,16 +66,16 @@ function createServer(spies: any) {
 }
 
 describe('integration', function () {
-  let request: any
+  let request: ReturnType<typeof requestFrom>
   let server: any
   let serviceConstructor: any
   let testClassConstructor: any
   let testFactoryFunctionInvocation: any
 
   beforeEach(function () {
-    serviceConstructor = jest.fn()
-    testClassConstructor = jest.fn()
-    testFactoryFunctionInvocation = jest.fn()
+    serviceConstructor = mock.fn()
+    testClassConstructor = mock.fn()
+    testFactoryFunctionInvocation = mock.fn()
     const spies = {
       serviceConstructor,
       testClassConstructor,
@@ -82,7 +84,7 @@ describe('integration', function () {
     return createServer(spies).then((s) => {
       server = s
       const addr = server.address()
-      request = AssertRequest(`http://127.0.0.1:${addr.port}`)
+      request = requestFrom(`http://127.0.0.1:${addr.port}`)
     })
   })
 
@@ -92,38 +94,32 @@ describe('integration', function () {
 
   describe('makeInvoker', function () {
     it('makes sure the spy is called once for each request', function () {
-      return Promise.all([
-        request.get('/function').okay(),
-        request.get('/function').okay(),
-      ]).then(() => {
-        expect(testClassConstructor).not.toHaveBeenCalled()
-        expect(testFactoryFunctionInvocation).toHaveBeenCalledTimes(2)
-        expect(serviceConstructor).toHaveBeenCalledTimes(2)
-      })
+      return Promise.all([request('/function'), request('/function')]).then(
+        () => {
+          assert.strictEqual(testClassConstructor.mock.callCount(), 0)
+          assert.strictEqual(testFactoryFunctionInvocation.mock.callCount(), 2)
+          assert.strictEqual(serviceConstructor.mock.callCount(), 2)
+        },
+      )
     })
   })
 
   describe('makeClassInvoker', function () {
     it('makes sure the spy is called once for each request', function () {
-      return Promise.all([
-        request.get('/class').okay(),
-        request.get('/class').okay(),
-      ]).then(() => {
-        expect(testFactoryFunctionInvocation).not.toHaveBeenCalled()
-        expect(testClassConstructor).toHaveBeenCalledTimes(2)
-        expect(serviceConstructor).toHaveBeenCalledTimes(2)
+      return Promise.all([request('/class'), request('/class')]).then(() => {
+        assert.strictEqual(testFactoryFunctionInvocation.mock.callCount(), 0)
+        assert.strictEqual(testClassConstructor.mock.callCount(), 2)
+        assert.strictEqual(serviceConstructor.mock.callCount(), 2)
       })
     })
   })
 
   describe('Invoker Descriptive Error', function () {
     it('throws an error when calling non-existent route handler and returns descriptive message', function () {
-      return request
-        .get('/fail')
-        .status(500)
-        .assert(function (res: any) {
-          return res.body.includes('does not exist on the controller')
-        })
+      return request('/fail', {
+        status: 500,
+        text: /does not exist on the controller/,
+      })
     })
   })
 })
