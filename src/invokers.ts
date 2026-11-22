@@ -7,8 +7,8 @@ import {
   asClass,
   ClassOrFunctionReturning,
   FunctionReturning,
+  isClass,
 } from 'awilix'
-import { isClass } from 'awilix/lib/utils'
 import { NextFunction, Request, Response } from 'express'
 import assert from 'assert'
 
